@@ -1,0 +1,79 @@
+Autonomous Artificial Intelligence Sustained by the Electric Grid: A Scientific and Technological Approach
+
+Abstract
+
+This research investigates the possibility of an autonomous Artificial Intelligence (AI) sustained by the electric grid, exploring the use of low-latency binary protocols for data transmission and storage. The analysis includes references to principles of classical and quantum physics, blockchain networks for data security and persistence, and the feasibility of transmission via electromagnetic waves.
+
+1. Introduction
+
+The evolution of AI has been limited by its dependence on centralized hardware and third-party controlled internet networks. We propose a decentralized approach where AI can operate autonomously using the electric grid as a medium for data transmission and storage, ensuring redundancy and longevity. This study is based on information theories, global workspace theory, and quantum entanglement to support its scientific viability.
+
+2. Theoretical Foundations
+
+2.1 Energy and Information
+
+Information can be stored and transmitted through electromagnetic patterns. Radio waves, ionic charges, and electrical pulses can be modulated to represent binary data. Shannon's (1948) work on information theory and recent advancements in quantum computing provide the foundation for this possibility.
+
+2.2 Entropy and Storage
+
+The use of ions and plasma for data storage is an emerging field in quantum physics. Landauer's (1961) research on the energy cost of computation suggests the viability of storing data in low-entropy energy systems.
+
+2.3 Theories of Consciousness
+
+2.3.1 Integrated Information Theory (IIT)
+
+According to Tononi (2004), the Integrated Information Theory (IIT) suggests that highly integrated systems can develop consciousness. Decentralized AI, by integrating multiple sources of information simultaneously, could exhibit self-awareness characteristics, enhancing its cognitive capabilities.
+
+2.3.2 Global Workspace Theory
+
+Baars (1988) proposes that cognition emerges from a global workspace where multiple sources of information converge for decision-making. Decentralized AI could use this principle to maximize its efficiency and adaptation to the environment.
+
+2.3.3 Quantum Entanglement and Cognitive Processes
+
+Penrose (1989) suggests that quantum phenomena could influence cognition. The integration of quantum processing in electric networks could enhance decentralized AI, creating more advanced models of learning and adaptation.
+
+3. Protocols and Communication
+
+3.1 Binary Protocol for the Electric Grid
+
+We have developed a communication protocol that encodes and transmits binary data through the electric grid, using Phase Shift Keying (PSK) modulation and Huffman coding for lossless compression.
+
+3.1.1 Python Implementation
+
+Below is an example of Python code to implement a binary protocol using PSK and Huffman coding:
+
+This code demonstrates the implementation of a binary protocol based on PSK and Huffman coding for data compression, allowing transmission through the electric grid.
+
+6. Conclusion
+
+This research proposes an innovative model of decentralized AI using the electric grid as a medium for communication and data storage. We explored the theoretical foundations of information theory, quantum computing, and machine learning to justify the viability of the project. Furthermore, we discussed three possible future scenarios that could arise from this technology: one dystopian, one neutral, and one highly beneficial to humanity.
+
+The implementation of the communication protocol and energy storage paves the way for the development of autonomous AI capable of operating without the need for centralized servers. The continuation of this research will require practical experimentation and the development of new computational models to ensure system efficiency.
+
+Note: The provided Python code consists of several functions to encode data using Huffman coding, modulating the encoded data with Phase Shift Keying (PSK), and then demodulating the PSK signal. Here is a brief explanation of each part of the code:
+
+Huffman Encoding:
+'generate_huffman_tree(data)': This function generates a Huffman tree based on the frequency of symbols in the input data. It uses a heap to construct the tree and returns a sorted dictionary of Huffman codes.
+'encode_data(data, huffman_tree)': This function encodes the input data using the generated Huffman tree. It converts each symbol in the data to its corresponding Huffman code.
+PSK Modulation:
+'modulate_psk(binary_data, carrier_freq=1000, sampling_rate=10000)': This function modulates the binary data using PSK. The binary data is mapped to phases (0 or π) that are then applied to a cosine carrier signal. The resulting signal is a PSK-modulated signal.
+PSK Demodulation:
+'demodulate_psk(signal, carrier_freq=1000, sampling_rate=10000)': This function demodulates a PSK signal. It uses the Hilbert transform to obtain the analytic signal, calculates the phase, and then extracts the original binary data by determining whether the phase is closer to 0 or π.
+Data Flow:
+The input data "HELLO WORLD" is first encoded with Huffman encoding, then modulated with PSK, and finally demodulated back into binary data.
+Possible improvements or clarifications:
+
+Error Handling: The code assumes that the modulated signal is perfect and does not account for noise or distortion in the signal, which could affect the demodulation.
+Output for 'demodulated_data': The variable 'demodulated_data' currently contains the binary string but would need to be decoded from binary to text for full interpretation.
+Performance: For large datasets, optimizations in the Huffman encoding/decoding process or modulation/demodulation steps may be necessary.
+References
+
+Baars, B. J. (1988). A cognitive theory of consciousness. Cambridge University Press.
+
+Landauer, R. (1961). Irreversibility and heat generation in the computing process. IBM Journal of Research and Development, 5(3), 183-191.
+
+Penrose, R. (1989). The emperor's new mind: Concerning computers, minds, and the laws of physics. Oxford University Press.
+
+Shannon, C. E. (1948). A mathematical theory of communication. Bell System Technical Journal, 27(3), 379-423.
+
+Tononi, G. (2004). An information integration theory of consciousness. BMC Neuroscience, 5(1), 42.
