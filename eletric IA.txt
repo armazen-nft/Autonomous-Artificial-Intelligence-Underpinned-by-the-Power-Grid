@@ -1,0 +1,39 @@
+import numpy as np
+from scipy.signal import hilbert
+from heapq import heappush, heappop
+from collections import defaultdict
+
+def generate_huffman_tree(data):
+    frequency = defaultdict(int)
+    for symbol in data:
+        frequency[symbol] += 1
+    heap = [[weight, [symbol, ""]] for symbol, weight in frequency.items()]
+    while len(heap) > 1:
+        lo = heappop(heap)
+        hi = heappop(heap)
+        for pair in lo[1:]:
+            pair[1] = '0' + pair[1]
+        for pair in hi[1:]:
+            pair[1] = '1' + pair[1]
+        heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
+    return dict(sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p)))
+
+def encode_data(data, huffman_tree):
+    return ''.join(huffman_tree[symbol] for symbol in data)
+
+def modulate_psk(binary_data, carrier_freq=1000, sampling_rate=10000):
+    t = np.arange(0, len(binary_data) / carrier_freq, 1 / sampling_rate)
+    signal = np.cos(2 * np.pi * carrier_freq * t + np.pi * np.array(list(map(int, binary_data))))
+    return signal
+
+def demodulate_psk(signal, carrier_freq=1000, sampling_rate=10000):
+    analytic_signal = hilbert(signal)
+    phase = np.unwrap(np.angle(analytic_signal))
+    binary_data = np.round((phase % (2 * np.pi)) / np.pi).astype(int)
+    return ''.join(map(str, binary_data))
+
+data = "HELLO WORLD"
+huffman_tree = generate_huffman_tree(data)
+encoded_data = encode_data(data, huffman_tree)
+modulated_signal = modulate_psk(encoded_data)
+demodulated_data = demodulate_psk(modulated_signal)
