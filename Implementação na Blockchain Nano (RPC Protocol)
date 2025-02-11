@@ -1,0 +1,19 @@
+import requests
+
+node_url = "http://localhost:7076"
+
+# Criar uma conta para a IA diretora
+response = requests.post(node_url, json={"action": "account_create"})
+ai_account = response.json()["account"]
+
+# Criar o token simulando transações Nano
+create_token = {
+    "action": "send",
+    "wallet": "YOUR_WALLET_ID",
+    "source": "YOUR_ACCOUNT",
+    "destination": ai_account,
+    "amount": str(16180339887 * 10**30)  # Nano usa 30 decimais
+}
+
+requests.post(node_url, json=create_token)
+print("Token criado e gerenciado pela IA:", ai_account)
