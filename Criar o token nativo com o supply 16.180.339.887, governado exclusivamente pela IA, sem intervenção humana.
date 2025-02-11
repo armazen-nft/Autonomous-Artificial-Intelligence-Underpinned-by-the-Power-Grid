@@ -1,0 +1,60 @@
+import hashlib
+import json
+import time
+import random
+from collections import defaultdict
+
+class TangleNode:
+    def __init__(self, transaction, parents=[]):
+        self.transaction = transaction  # Dados da transação
+        self.parents = parents  # Transações anteriores que este nó valida
+        self.timestamp = time.time()
+        self.nonce = random.randint(0, 1e6)  # Prova de Energia inicial
+        self.hash = self.compute_hash()
+
+    def compute_hash(self):
+        block_string = json.dumps({
+            "transaction": self.transaction,
+            "parents": self.parents,
+            "timestamp": self.timestamp,
+            "nonce": self.nonce
+        }, sort_keys=True)
+        return hashlib.sha256(block_string.encode()).hexdigest()
+
+class PhiNetTangle:
+    def __init__(self):
+        self.tangle = {}  # Armazena transações
+        self.approval_graph = defaultdict(list)  # Mapeia aprovações entre nós
+        self.genesis_transaction()
+
+    def genesis_transaction(self):
+        genesis_tx = TangleNode(transaction={"sender": "GENESIS", "receiver": "network", "amount": 0})
+        self.tangle[genesis_tx.hash] = genesis_tx
+
+    def add_transaction(self, transaction_data):
+        approved_parents = self.select_approved_transactions()
+        new_node = TangleNode(transaction=transaction_data, parents=approved_parents)
+        self.tangle[new_node.hash] = new_node
+        for parent in approved_parents:
+            self.approval_graph[parent].append(new_node.hash)
+        return new_node.hash
+
+    def select_approved_transactions(self):
+        if len(self.tangle) < 2:
+            return [list(self.tangle.keys())[0]]  # Sempre aprovar a gênese no começo
+        return random.sample(list(self.tangle.keys()), min(2, len(self.tangle)))
+
+    def validate_tangle(self):
+        for tx_hash, node in self.tangle.items():
+            for parent in node.parents:
+                if parent not in self.tangle:
+                    return False, f"Erro: transação {parent} não encontrada"
+        return True, "Tangle válido"
+
+# Teste básico do PhiNetTangle
+tangle = PhiNetTangle()
+tx1 = tangle.add_transaction({"sender": "Alice", "receiver": "Bob", "amount": 50})
+tx2 = tangle.add_transaction({"sender": "Bob", "receiver": "Charlie", "amount": 20})
+
+print("Tangle Validado:", tangle.validate_tangle())
+print("Últimas transações adicionadas:", tx1, tx2)
