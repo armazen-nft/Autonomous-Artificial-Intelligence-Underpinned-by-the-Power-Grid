@@ -1,0 +1,19 @@
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+let nodes = [];
+
+app.post("/register", (req, res) => {
+    const { address, energyUsage, transactionsProcessed } = req.body;
+    const efficiency = transactionsProcessed / (energyUsage * 0.9);
+    nodes.push({ address, efficiency });
+    res.json({ message: "Node registrado!", efficiency });
+});
+
+app.get("/nodes", (req, res) => {
+    res.json(nodes);
+});
+
+app.listen(3000, () => console.log("API rodando na porta 3000"));
