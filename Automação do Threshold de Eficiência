@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+contract EfficiencyOracle {
+    address public owner;
+    uint256 public globalEnergyConsumption;
+    uint256 public globalTransactionCount;
+    uint256 public efficiencyThreshold;
+
+    event ThresholdUpdated(uint256 newThreshold);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Apenas o dono pode alterar isso.");
+        _;
+    }
+
+    constructor(uint256 _initialThreshold) {
+        owner = msg.sender;
+        efficiencyThreshold = _initialThreshold;
+    }
+
+    function updateMetrics(uint256 _energy, uint256 _transactions) public onlyOwner {
+        globalEnergyConsumption = _energy;
+        globalTransactionCount = _transactions;
+        efficiencyThreshold = (globalTransactionCount * 100) / globalEnergyConsumption;
+
+        emit ThresholdUpdated(efficiencyThreshold);
+    }
+
+    function getEfficiencyThreshold() public view returns (uint256) {
+        return efficiencyThreshold;
+    }
+}
