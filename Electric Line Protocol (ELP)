@@ -1,0 +1,47 @@
+import time
+import random
+
+def encode_message(message):
+    """Codifica a mensagem em pulsos binários."""
+    binary_message = ''.join(format(ord(c), '08b') for c in message)
+    encoded_pulses = []
+    
+    for bit in binary_message:
+        if bit == '1':
+            encoded_pulses.append((1, 3))  # Pulso longo (3 ms)
+        else:
+            encoded_pulses.append((0, 1))  # Pulso curto (1 ms)
+    
+    return encoded_pulses
+
+def transmit(pulses):
+    """Simula a transmissão dos pulsos pela rede elétrica."""
+    print("Transmitindo dados...")
+    for pulse, duration in pulses:
+        print(f"Pulso: {pulse}, Duração: {duration} ms")
+        time.sleep(duration / 1000)  # Converte ms para segundos
+    print("Transmissão concluída!\n")
+
+def decode_pulses(pulses):
+    """Decodifica os pulsos recebidos em uma mensagem."""
+    binary_string = ''.join('1' if p[0] == 1 else '0' for p in pulses)
+    message = ''.join(chr(int(binary_string[i:i+8], 2)) for i in range(0, len(binary_string), 8))
+    return message
+
+def receive():
+    """Simula a recepção de dados da rede elétrica."""
+    print("Aguardando transmissão...")
+    time.sleep(random.uniform(0.5, 1.5))  # Simula latência
+    
+    received_pulses = encode_message("HELLO")  # Simulando uma mensagem recebida
+    print("Dados recebidos!")
+    decoded_message = decode_pulses(received_pulses)
+    print(f"Mensagem decodificada: {decoded_message}\n")
+    return decoded_message
+
+# Testando a transmissão e recepção
+data = "TESTE"
+coded_pulses = encode_message(data)
+transmit(coded_pulses)
+decoded_data = decode_pulses(coded_pulses)
+print(f"Mensagem original: {data}, Mensagem recebida: {decoded_data}")
