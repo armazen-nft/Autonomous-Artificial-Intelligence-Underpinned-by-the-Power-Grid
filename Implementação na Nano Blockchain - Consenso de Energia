@@ -1,0 +1,8 @@
+import nanopy
+
+wallet = nanopy.Wallet()
+account = wallet.create_account()
+balance = wallet.get_balance(account)
+
+print(f"Nova conta Nano criada: {account}")
+print(f"Saldo: {balance} NANO")
