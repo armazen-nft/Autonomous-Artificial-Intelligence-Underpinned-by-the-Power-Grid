@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+contract ProofOfEnergy {
+    struct Node {
+        uint256 energyConsumption;  // Consumo energético em watts
+        uint256 transactionCount;   // Número de transações processadas
+        uint256 efficiencyScore;    // Eficiência energética calculada
+        bool isValid;               // Indica se o nó pode participar do consenso
+    }
+
+    address public owner;
+    mapping(address => Node) public nodes;
+    uint256 public efficiencyThreshold = 50; // Eficiência mínima exigida
+
+    event NodeRegistered(address indexed nodeAddress, uint256 energyConsumption, uint256 transactionCount);
+    event NodeValidated(address indexed nodeAddress, uint256 efficiencyScore, bool isValid);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Apenas o dono pode alterar isso.");
+        _;
+    }
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function registerNode(uint256 _energyConsumption, uint256 _transactionCount) public {
+        require(_energyConsumption > 0, "Consumo energetico deve ser maior que zero.");
+        require(_transactionCount > 0, "Numero de transacoes deve ser maior que zero.");
+
+        uint256 efficiencyScore = (_transactionCount * 100) / _energyConsumption;
+        bool isValid = efficiencyScore >= efficiencyThreshold;
+
+        nodes[msg.sender] = Node(_energyConsumption, _transactionCount, efficiencyScore, isValid);
+
+        emit NodeRegistered(msg.sender, _energyConsumption, _transactionCount);
+        emit NodeValidated(msg.sender, efficiencyScore, isValid);
+    }
+
+    function getNodeEfficiency(address _nodeAddress) public view returns (uint256, bool) {
+        Node memory node = nodes[_nodeAddress];
+        return (node.efficiencyScore, node.isValid);
+    }
+
+    function setEfficiencyThreshold(uint256 _newThreshold) public onlyOwner {
+        efficiencyThreshold = _newThreshold;
+    }
+}
