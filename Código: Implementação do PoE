@@ -1,0 +1,39 @@
+import random
+import time
+
+class Node:
+    def __init__(self, id, energy_consumption, transaction_count):
+        self.id = id
+        self.energy_consumption = energy_consumption  # Watts
+        self.transaction_count = transaction_count
+        self.efficiency_score = 0
+
+    def calculate_efficiency(self):
+        """Calcula a eficiência energética com base no consumo por transação"""
+        if self.transaction_count > 0:
+            self.efficiency_score = self.transaction_count / self.energy_consumption
+        return self.efficiency_score
+
+    def validate_block(self):
+        """Determina se um nó pode validar um bloco com base na eficiência"""
+        efficiency_threshold = 0.5  # Ajustável para controlar a dificuldade do PoE
+        return self.calculate_efficiency() >= efficiency_threshold
+
+# Simulação de 5 nós com diferentes consumos de energia e transações processadas
+nodes = [
+    Node(1, energy_consumption=random.uniform(50, 100), transaction_count=random.randint(10, 200)),
+    Node(2, energy_consumption=random.uniform(30, 90), transaction_count=random.randint(50, 300)),
+    Node(3, energy_consumption=random.uniform(40, 110), transaction_count=random.randint(20, 150)),
+    Node(4, energy_consumption=random.uniform(20, 80), transaction_count=random.randint(80, 250)),
+    Node(5, energy_consumption=random.uniform(25, 70), transaction_count=random.randint(100, 400)),
+]
+
+# Validação dos nós
+for node in nodes:
+    print(f"Nó {node.id}: Eficiência {node.calculate_efficiency():.4f}")
+    if node.validate_block():
+        print(f"✅ Nó {node.id} validou o bloco!")
+    else:
+        print(f"❌ Nó {node.id} não atingiu a eficiência mínima.")
+    print("-" * 40)
+    time.sleep(1)
