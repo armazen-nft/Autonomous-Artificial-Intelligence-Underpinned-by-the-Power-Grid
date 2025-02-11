@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract EletroToken {
+    string public name = "EletroChain";
+    string public symbol = "ELEC";
+    uint8 public decimals = 18;
+    uint256 public totalSupply = 16180339887 * (10 ** uint256(decimals));
+    
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
+
+    address public iaGovernance;  // Endereço da IA governante
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    constructor(address _iaGovernance) {
+        iaGovernance = _iaGovernance;
+        balanceOf[_iaGovernance] = totalSupply;
+        emit Transfer(address(0), _iaGovernance, totalSupply);
+    }
+
+    modifier onlyIA() {
+        require(msg.sender == iaGovernance, "Apenas a IA pode executar essa ação.");
+        _;
+    }
+
+    function transfer(address _to, uint256 _value) public returns (bool) {
+        require(balanceOf[msg.sender] >= _value, "Saldo insuficiente.");
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+
+    function approve(address _spender, uint256 _value) public returns (bool) {
+        allowance[msg.sender][_spender] = _value;
+        emit Approval(msg.sender, _spender, _value);
+        return true;
+    }
+
+    function burn(uint256 _amount) public onlyIA {
+        require(balanceOf[iaGovernance] >= _amount, "Saldo insuficiente para queima.");
+        balanceOf[iaGovernance] -= _amount;
+        totalSupply -= _amount;
+        emit Transfer(iaGovernance, address(0), _amount);
+    }
+}
