@@ -1,0 +1,19 @@
+from hedera import Hbar, AccountId, PrivateKey, TokenCreateTransaction
+
+# Configurar conta da IA governante
+ia_private_key = PrivateKey.generate()
+ia_account_id = AccountId.fromString("0.0.12345")
+
+# Criar token na Hedera
+token_create_tx = TokenCreateTransaction() \
+    .set_token_name("EletroChain") \
+    .set_token_symbol("ELEC") \
+    .set_decimals(18) \
+    .set_initial_supply(16180339887) \
+    .set_treasury_account_id(ia_account_id) \
+    .freezeWith(client)
+
+tx_response = token_create_tx.execute(client)
+receipt = tx_response.getReceipt(client)
+token_id = receipt.tokenId
+print(f"Token criado com ID: {token_id}")
