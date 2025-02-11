@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract ProofOfEnergy {
+    uint256 public totalSupply = 16180339887;
+    address public directorAI;
+
+    mapping(address => uint256) public balances;
+    mapping(address => bool) public isValidator;
+
+    constructor() {
+        directorAI = msg.sender;
+        balances[directorAI] = totalSupply;
+    }
+
+    function registerValidator(address _node) public {
+        require(msg.sender == directorAI, "Apenas IA pode registrar");
+        isValidator[_node] = true;
+    }
+
+    function validateTransaction(address _validator, uint256 energyEfficiency) public {
+        require(isValidator[_validator], "Nao e um validador autorizado");
+        uint256 reward = energyEfficiency * 10;
+        balances[_validator] += reward;
+    }
+}
