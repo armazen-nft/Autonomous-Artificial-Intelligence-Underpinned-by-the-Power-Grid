@@ -1,0 +1,1 @@
+Get-WmiObject -Namespace root\WMI -Class BatteryStatus | Select-Object PowerOnline, DischargeRate
