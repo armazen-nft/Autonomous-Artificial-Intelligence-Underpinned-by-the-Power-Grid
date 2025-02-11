@@ -1,0 +1,16 @@
+from iota import Iota, ProposedTransaction, Address, Tag, TryteString
+
+# Conectar-se ao nó IOTA
+api = Iota("https://nodes.iota.org")
+
+# Criar transação
+tx = ProposedTransaction(
+    address=Address(b"IAADDRESS9999999999999999999999"),
+    message=TryteString.from_string("EletroChain transaction"),
+    value=0,
+    tag=Tag(b"ELETROCHAIN")
+)
+
+# Enviar transação
+api.send_transfer(transfers=[tx])
+print("Transação enviada na IOTA")
