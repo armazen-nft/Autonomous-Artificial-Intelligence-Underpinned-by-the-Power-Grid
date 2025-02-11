@@ -1,0 +1,25 @@
+from hedera import AccountId, PrivateKey, Client, TokenCreateTransaction, TokenType
+
+# Configuração da conta do administrador da IA
+admin_private_key = PrivateKey.generate()
+admin_account_id = AccountId.fromString("0.0.XXXX")  # Substituir pelo ID correto
+
+# Configuração do cliente Hedera
+client = Client.forTestnet()
+client.setOperator(admin_account_id, admin_private_key)
+
+# Criação do Token
+transaction = (TokenCreateTransaction()
+    .setTokenName("EnergyAI")
+    .setTokenSymbol("EAI")
+    .setTokenType(TokenType.FUNGIBLE_COMMON)
+    .setDecimals(8)
+    .setInitialSupply(16180339887)  # Suprimento fixo
+    .setTreasuryAccountId(admin_account_id)
+    .freezeWith(client)
+    .sign(admin_private_key)
+)
+
+tx_response = transaction.execute(client)
+receipt = tx_response.getReceipt(client)
+print("Token criado com ID:", receipt.tokenId)
