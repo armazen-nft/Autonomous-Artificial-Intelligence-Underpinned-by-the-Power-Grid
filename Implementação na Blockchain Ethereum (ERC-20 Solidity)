@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract EnergyAIToken {
+    string public name = "Energy AI";
+    string public symbol = "EAI";
+    uint8 public decimals = 8;
+    uint256 public totalSupply = 16180339887 * 10**8;
+    
+    mapping(address => uint256) public balanceOf;
+    address public aiDirector;
+
+    constructor() {
+        aiDirector = msg.sender; // IA tomará controle via smart contract externo
+        balanceOf[aiDirector] = totalSupply;
+    }
+
+    function transfer(address _to, uint256 _amount) public returns (bool) {
+        require(msg.sender == aiDirector, "Apenas IA pode autorizar");
+        require(balanceOf[aiDirector] >= _amount, "Saldo insuficiente");
+        balanceOf[aiDirector] -= _amount;
+        balanceOf[_to] += _amount;
+        return true;
+    }
+}
