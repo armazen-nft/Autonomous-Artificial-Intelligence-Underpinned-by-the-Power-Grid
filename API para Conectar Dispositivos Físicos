@@ -1,0 +1,30 @@
+const express = require("express");
+const Web3 = require("web3");
+const contractABI = require("./PoEContractABI.json");
+const app = express();
+
+const web3 = new Web3("https://json-rpc.evm.iotaledger.net");
+const contractAddress = "0x7464051f8E189C34F516e7e3f6d1935e56788424";
+const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+app.use(express.json());
+
+app.post("/registerNode", async (req, res) => {
+    const { nodeAddress, energyConsumption, transactionCount } = req.body;
+
+    try {
+        const efficiencyScore = (transactionCount * 100) / energyConsumption;
+        const isValid = efficiencyScore >= 50;
+
+        await contract.methods.registerNode(energyConsumption, transactionCount).send({
+            from: nodeAddress,
+            gas: 200000
+        });
+
+        res.json({ success: true, efficiencyScore, isValid });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.listen(3000, () => console.log("API PoE rodando na porta 3000"));
