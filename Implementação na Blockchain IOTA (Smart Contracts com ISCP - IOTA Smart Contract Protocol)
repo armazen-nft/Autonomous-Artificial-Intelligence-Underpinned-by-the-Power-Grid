@@ -1,0 +1,16 @@
+from iota import Iota, ProposedTransaction, Address, TryteString
+
+api = Iota("https://nodes.devnet.iota.org:443", "YOUR_SEED")
+
+# Criando endereço da IA diretora
+ai_address = api.get_new_addresses(count=1)["addresses"][0]
+
+# Criando token com suprimento fixo
+tx = ProposedTransaction(
+    address=Address(ai_address),
+    value=16180339887,
+    message=TryteString.from_unicode("Token EnergyAI gerenciado pela IA")
+)
+
+result = api.send_transfer(transfers=[tx])
+print("Token criado e enviado para:", ai_address)
