@@ -1,0 +1,63 @@
+import hashlib
+import time
+import random
+
+class Transaction:
+    def __init__(self, sender, receiver, amount):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+        self.timestamp = time.time()
+        self.tx_id = self.calculate_hash()
+
+    def calculate_hash(self):
+        tx_string = f"{self.sender}{self.receiver}{self.amount}{self.timestamp}"
+        return hashlib.sha256(tx_string.encode()).hexdigest()
+
+class Block:
+    def __init__(self, previous_hash, transactions):
+        self.previous_hash = previous_hash
+        self.transactions = transactions
+        self.timestamp = time.time()
+        self.block_hash = self.calculate_hash()
+
+    def calculate_hash(self):
+        tx_hashes = ''.join(tx.tx_id for tx in self.transactions)
+        block_string = f"{self.previous_hash}{tx_hashes}{self.timestamp}"
+        return hashlib.sha256(block_string.encode()).hexdigest()
+
+class PhiNetBlockchain:
+    def __init__(self):
+        self.chain = []
+        self.pending_transactions = []
+        self.create_genesis_block()
+
+    def create_genesis_block(self):
+        genesis_block = Block("0", [])
+        self.chain.append(genesis_block)
+
+    def add_transaction(self, sender, receiver, amount):
+        tx = Transaction(sender, receiver, amount)
+        self.pending_transactions.append(tx)
+
+    def mine_block(self):
+        if len(self.pending_transactions) == 0:
+            return False
+
+        new_block = Block(self.chain[-1].block_hash, self.pending_transactions)
+        self.chain.append(new_block)
+        self.pending_transactions = []
+        return True
+
+# Testando a blockchain Phi-Net
+phi_blockchain = PhiNetBlockchain()
+phi_blockchain.add_transaction("Alice", "Bob", 10)
+phi_blockchain.mine_block()
+phi_blockchain.add_transaction("Bob", "Charlie", 5)
+phi_blockchain.mine_block()
+
+# Exibindo o blockchain
+for block in phi_blockchain.chain:
+    print(f"Bloco Hash: {block.block_hash}")
+    print(f"Hash Anterior: {block.previous_hash}")
+    print("-" * 50)
