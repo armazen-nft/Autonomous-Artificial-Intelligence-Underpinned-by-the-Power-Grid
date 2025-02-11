@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.21;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract PoEToken is ERC20, Ownable {
+    uint256 public constant TOTAL_SUPPLY = 16180339887 * (10 ** 18);
+
+    constructor() ERC20("Proof of Energy Token", "POE") {
+        _mint(address(this), TOTAL_SUPPLY);
+    }
+
+    function rewardNode(address _node, uint256 _amount) public onlyOwner {
+        require(balanceOf(address(this)) >= _amount, "Saldo insuficiente no contrato.");
+        _transfer(address(this), _node, _amount);
+    }
+
+    function burn(uint256 _amount) public {
+        _burn(msg.sender, _amount);
+    }
+}
