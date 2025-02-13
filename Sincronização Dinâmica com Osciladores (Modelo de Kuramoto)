@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Configuração do número de osciladores e parâmetros
+num_osciladores = 10
+acoplamento = 0.5
+frequencias_naturais = np.random.uniform(0.8, 1.2, num_osciladores)
+
+# Inicialização das fases aleatórias
+fases = np.random.uniform(0, 2 * np.pi, num_osciladores)
+
+# Função de atualização usando o modelo de Kuramoto
+def atualizar_fases(fases, frequencias, acoplamento, dt=0.01):
+    novas_fases = np.copy(fases)
+    for i in range(len(fases)):
+        sincronizacao = np.sum(np.sin(fases - fases[i]))
+        novas_fases[i] += dt * (frequencias[i] + (acoplamento / len(fases)) * sincronizacao)
+    return novas_fases
+
+# Simulação
+tempo_simulacao = 1000
+historico_fases = []
+
+for _ in range(tempo_simulacao):
+    fases = atualizar_fases(fases, frequencias_naturais, acoplamento)
+    historico_fases.append(np.copy(fases))
+
+# Visualização das fases
+plt.plot(historico_fases)
+plt.title("Sincronização de Osciladores (Kuramoto)")
+plt.xlabel("Tempo")
+plt.ylabel("Fase")
+plt.show()
