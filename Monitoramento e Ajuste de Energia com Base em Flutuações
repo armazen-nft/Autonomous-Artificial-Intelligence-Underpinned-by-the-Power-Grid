@@ -1,0 +1,15 @@
+import random
+
+# Monitoramento de carga de energia
+def monitorar_carga():
+    return random.uniform(0.5, 1.5)  # Simula flutuações de carga
+
+# Ajuste de intensidade com base em flutuações
+for _ in range(10):
+    carga = monitorar_carga()
+    if carga > 1.2:
+        print(f"Carga alta detectada: {carga}. Ajustando consumo de energia...")
+    elif carga < 0.8:
+        print(f"Carga baixa: {carga}. Otimizando para economia de energia.")
+    else:
+        print(f"Carga estável: {carga}. Mantendo operações normais.")
