@@ -1,0 +1,38 @@
+import tensorflow as tf
+import numpy as np
+
+# Simples rede neural para aprendizado com perturbações aleatórias
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(10, activation='relu', input_shape=(5,)),
+    tf.keras.layers.Dense(1)
+])
+
+# Função de perda e otimizador
+loss_fn = tf.keras.losses.MeanSquaredError()
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
+
+# Função de perturbação aleatória nos pesos
+def perturbar_pesos(model, magnitude=0.05):
+    for layer in model.layers:
+        pesos, biases = layer.get_weights()
+        perturbacao = np.random.normal(0, magnitude, pesos.shape)
+        layer.set_weights([pesos + perturbacao, biases])
+
+# Treinamento com perturbações
+for step in range(100):
+    # Perturba os pesos antes de cada atualização
+    perturbar_pesos(model)
+
+    # Dados fictícios de entrada e saída
+    x_train = np.random.random((10, 5))
+    y_train = np.random.random((10, 1))
+
+    # Atualização dos pesos
+    with tf.GradientTape() as tape:
+        preds = model(x_train)
+        loss = loss_fn(y_train, preds)
+    grads = tape.gradient(loss, model.trainable_weights)
+    optimizer.apply_gradients(zip(grads, model.trainable_weights))
+
+    if step % 10 == 0:
+        print(f"Etapa {step}, Perda: {loss.numpy()}")
