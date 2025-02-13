@@ -1,0 +1,24 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Função de sinal fraco
+def sinal_fraco(t):
+    return 0.1 * np.sin(2 * np.pi * 0.1 * t)
+
+# Gerar sinal com ruído branco
+tempo = np.linspace(0, 10, 1000)
+ruido = np.random.normal(0, 0.2, len(tempo))
+sinal_ruidoso = sinal_fraco(tempo) + ruido
+
+# Aplicar resonância estocástica ajustando o nível de ruído
+nivel_ruido_ideal = 0.15  # Nível ideal de ruído
+sinal_amplificado = sinal_fraco(tempo) + np.random.normal(0, nivel_ruido_ideal, len(tempo))
+
+# Visualização
+plt.plot(tempo, sinal_ruidoso, label="Sinal Original com Ruído")
+plt.plot(tempo, sinal_amplificado, label="Sinal com Resonância Estocástica")
+plt.legend()
+plt.title("Amplificação de Sinais Fracos com Ruído Controlado")
+plt.xlabel("Tempo")
+plt.ylabel("Amplitude")
+plt.show()
