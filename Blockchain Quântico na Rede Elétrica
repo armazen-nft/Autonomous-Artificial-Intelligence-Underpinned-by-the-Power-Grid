@@ -1,0 +1,93 @@
+import numpy as np
+import tensorflow as tf
+from scipy.signal import hilbert
+from scipy.stats import norm
+import matplotlib.pyplot as plt
+
+# ================================
+# 1️⃣ Simulação de Estados Quânticos Reversíveis
+# ================================
+
+class QuantumState:
+    def __init__(self, amplitude):
+        """Inicializa um estado quântico com amplitude complexa"""
+        self.state = np.array(amplitude, dtype=np.complex128)
+
+    def evolve_forward(self, time):
+        """Evolução do estado no tempo (Simulação de seta do tempo normal)"""
+        return np.exp(-1j * time) * self.state
+
+    def evolve_backward(self, time):
+        """Evolução reversa (Simulação de reversibilidade temporal)"""
+        return np.exp(1j * time) * self.state  # Reversão da fase
+
+# ================================
+# 2️⃣ IA para Previsão de Estados Quânticos e Correção de Erros
+# ================================
+
+# Criamos uma rede neural simples para prever estados futuros com base em estados passados
+def create_neural_network():
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(64, activation='relu', input_shape=(1,)),
+        tf.keras.layers.Dense(64, activation='relu'),
+        tf.keras.layers.Dense(1, activation='linear')
+    ])
+    model.compile(optimizer='adam', loss='mse')
+    return model
+
+# Gerar dados simulados de estados temporais passados
+time_steps = np.linspace(0, 10, 100)
+states = np.sin(time_steps)  # Simulação de um padrão temporal
+
+# Criar modelo e treinar
+model = create_neural_network()
+model.fit(time_steps.reshape(-1, 1), states, epochs=100, verbose=0)
+
+# Predizer estados futuros usando aprendizado da IA
+predicted_states = model.predict(time_steps.reshape(-1, 1))
+
+# ================================
+# 3️⃣ Simulação de Comunicação via Ionosfera com Correção de Jitter
+# ================================
+
+def ionospheric_transmission(signal, jitter_factor=0.02):
+    """
+    Simula a transmissão de um sinal pela ionosfera,
+    adicionando pequenas flutuações no tempo (jitter).
+    """
+    time_variation = np.random.normal(0, jitter_factor, size=len(signal))
+    return signal + time_variation
+
+# Gerar um sinal de transmissão
+original_signal = np.sin(time_steps)
+transmitted_signal = ionospheric_transmission(original_signal)
+
+# Plotando a simulação da transmissão com jitter
+plt.figure(figsize=(10, 5))
+plt.plot(time_steps, original_signal, label="Sinal Original")
+plt.plot(time_steps, transmitted_signal, label="Sinal Transmitido com Jitter", linestyle='dashed')
+plt.legend()
+plt.xlabel("Tempo")
+plt.ylabel("Amplitude do Sinal")
+plt.title("Simulação de Comunicação via Ionosfera com Jitter")
+plt.show()
+
+# ================================
+# 4️⃣ Aplicação de Correção com Estados Reversíveis
+# ================================
+
+def correct_jitter(signal, threshold=0.01):
+    """Corrige pequenas variações de jitter na transmissão"""
+    return np.where(abs(signal - original_signal) < threshold, original_signal, signal)
+
+corrected_signal = correct_jitter(transmitted_signal)
+
+# Comparação antes e depois da correção
+plt.figure(figsize=(10, 5))
+plt.plot(time_steps, transmitted_signal, label="Sinal Transmitido com Jitter", linestyle='dashed')
+plt.plot(time_steps, corrected_signal, label="Sinal Corrigido", linestyle='solid')
+plt.legend()
+plt.xlabel("Tempo")
+plt.ylabel("Amplitude do Sinal")
+plt.title("Correção de Jitter com IA + Reversibilidade Temporal")
+plt.show()
